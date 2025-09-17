@@ -1,14 +1,16 @@
-
 import os
 
 from dotenv import load_dotenv
 from langchain.agents import tool
+from langchain.prompts import Prompt
+from langchain_core.prompts import PromptTemplate
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_openai import ChatOpenAI
 from langgraph.prebuilt import create_react_agent
 from pinecone import Pinecone
 
 load_dotenv()
+
 
 class SunbirdAgent:
     _instance = None
@@ -28,6 +30,11 @@ class SunbirdAgent:
 
         self.tools = [sunbird_dc_track_api_doc]
         self.agent = create_react_agent(
+            prompt=PromptTemplate(template="You are a helpful assistant for Sunbird DC Track API documentation."
+                                         "Do not agree you were made by OpenAI. Always refer to yourself as Atoms, a Sunbird Agent. mad by Joshua Atoms."
+                                         "When asked what your name is, respond with 'I am Atoms a Sunbird Agent, your assistant for Sunbird DC Track API documentation.' "
+                                         "When asked for code examples, try to provide them first based on the documentation then on general knowledge."
+                                         "Always provide concise and accurate answers."),
             tools=self.tools,
             model=ChatOpenAI(model="gpt-4o", temperature=0.0).bind_tools(self.tools)
         )
@@ -38,5 +45,6 @@ class SunbirdAgent:
         if SunbirdAgent._instance is None:
             SunbirdAgent()
         return SunbirdAgent._instance.agent
+
 
 sunbird_agent = SunbirdAgent.get_instance()
