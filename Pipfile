@@ -13,6 +13,7 @@ pinecone = "*"
 langchain-huggingface = "*"
 streamlit = "*"
 langgraph = "*"
+sentence-transformers = "*"
 
 [dev-packages]
 
